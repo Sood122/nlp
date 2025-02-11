@@ -1,0 +1,31 @@
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Download necessary NLTK resources (quietly)
+nltk.download('punkt', quiet=True)
+nltk.download('stopwords', quiet=True)
+nltk.download('punkt_tab', quiet=True)
+
+def remove_stopwords(text):
+  """
+  Removes stop words from a given text using NLTK's stopwords corpus.
+
+  Args:
+    text: The input text string.
+
+  Returns:
+    A string with stop words removed.
+  """
+  stop_words = set(stopwords.words('english'))
+  tokens = word_tokenize(text)
+  filtered_tokens = [word for word in tokens if word.lower() not in stop_words]
+  return " ".join(filtered_tokens)
+
+# The text about Chandigarh University
+text = """Chandigarh University (CU) is a leading Indian Institution offering its students a unique amalgamation of professional and academic excellence. The University has been accredited with the prestigious A+ grade by the National Assessment and Accreditation Council (NAAC). Chandigarh University has become Youngest and the only private university in India to bag an A+ grade in the first cycle of the accreditation process and has also become the only state private university of Punjab to be accredited by NAAC."""
+
+processed_text = remove_stopwords(text)
+
+print(f"Original text:\n{text}")
+print(f"\nProcessed text:\n{processed_text}")
