@@ -1,0 +1,47 @@
+import nltk
+from nltk import ngrams
+from nltk.corpus import reuters
+from nltk import FreqDist
+import random
+
+nltk.download('reuters')
+nltk.download('punkt')
+
+# Load the reuters corpus for demonstration
+corpus = reuters.sents()
+
+# Flatten the list of sentences to create a single list of words
+flat_corpus = [word.lower() for sentence in corpus for word in sentence]
+
+# Function to generate N-grams
+def generate_ngrams(corpus, n):
+    # Tokenizing the corpus into N-grams
+    n_grams = ngrams(corpus, n)
+    return n_grams
+
+# Function to build a frequency distribution of N-grams
+def build_ngram_model(corpus, n):
+    n_grams = generate_ngrams(corpus, n)
+    ngram_freq = FreqDist(n_grams)
+    return ngram_freq
+
+# Function to predict next word using N-grams
+def predict_next_word(ngram_model, context):
+    context = tuple(context)
+    candidates = [ngram for ngram in ngram_model if ngram[:len(context)] == context]
+    if candidates:
+        next_word = random.choice(candidates)[-1]
+        return next_word
+    return None
+
+# Example: Creating bigrams (2-grams) and trigram (3-grams) model
+bigram_model = build_ngram_model(flat_corpus, 2)
+trigram_model = build_ngram_model(flat_corpus, 3)
+
+# Example usage: Predict the next word for a given context
+context = ['oil']
+next_word_bigram = predict_next_word(bigram_model, context)
+next_word_trigram = predict_next_word(trigram_model, context)
+
+print("Next word prediction using Bigram model:", next_word_bigram)
+print("Next word prediction using Trigram model:", next_word_trigram)
