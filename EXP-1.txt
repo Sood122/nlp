@@ -1,0 +1,62 @@
+import nltk
+import re
+import os
+import unicodedata
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+# Suppress NLTK downloader messages
+with open(os.devnull, 'w') as f:
+    nltk.download('punkt', quiet=True)
+    nltk.download('stopwords', quiet=True)
+
+# Input text
+text = """NLTK is a leading platform for building Python programs to work with human language data. 
+It provides easy-to-use interfaces to over 50 corpora and lexical resources such as WordNet, 
+along with a suite of text processing libraries for classification, tokenization, stemming, tagging, 
+parsing, and semantic reasoning, wrappers for industrial-strength NLP libraries, and an active discussion forum."""
+
+# 1. Sentence Tokenization
+sentences = sent_tokenize(text)
+print("1. Sentence Tokenization:")
+for i, sentence in enumerate(sentences, start=1):
+    print(f"Sentence {i}: {sentence}")
+print("\n")
+
+# 2. Lowercase the Text
+lowercase_text = text.lower()
+print("2. Lowercase the Text:")
+print(lowercase_text)
+print("\n")
+
+# 3. Remove Punctuation
+text_no_punctuation = re.sub(r'[^\w\s]', '', lowercase_text)
+print("3. Remove Punctuation:")
+print(text_no_punctuation)
+print("\n")
+
+# 4. Remove Numbers
+text_no_numbers = re.sub(r'\d+', '', text_no_punctuation)
+print("4. Remove Numbers:")
+print(text_no_numbers)
+print("\n")
+
+# 5. Tokenization After Punctuation and Number Removal
+tokens_after_cleanup = word_tokenize(text_no_numbers)
+print("5. Tokenization After Punctuation and Number Removal:")
+print(tokens_after_cleanup)
+print("\n")
+
+# Step 6: Stop Word Removal
+stop_words = set(stopwords.words('english'))
+tokens_without_stopwords = [word for word in tokens_after_cleanup if word.lower() not in stop_words]
+print("6. Tokens without Stop Words:")
+print(tokens_without_stopwords)
+print("\n")
+
+# Step 7: Stemming
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in tokens_without_stopwords]
+print("7. Stemmed Tokens:")
+print(stemmed_tokens)
